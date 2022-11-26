@@ -6,7 +6,7 @@ var monoSpace = '```'
 
 exports.listmenu = (sender,prefix,ad,namenya,premnya,usernya,romnya,tanggal,jam,no) => {
 return`
-━━━❲ 𝙂𝙐𝙍𝘽𝙊𝙏-𝙈𝘿 ━━━
+━━━━━〔 𝙂𝙐𝙍𝘽𝙊𝙏-𝙈𝘿 〕━━━
 
  𝗨𝗦𝗘𝗥 𝗜𝗡𝗙𝗢
  ID : @${sender.split('@')[0]}
@@ -56,6 +56,7 @@ return`
  ${no++} ➳ ${prefix}session
  ${no++} ➳ ${prefix}resetdb
  ${no++} ➳ ${prefix}runtime
+ ${no++} ➳ ${prefix}setnamabot
  ${no++} ➳ ${prefix}setexif
  ${no++} ➳ ${prefix}setwm
  ${no++} ➳ ${prefix}setfooter
@@ -167,7 +168,7 @@ return`
  ${no++} ➳ ${prefix}emojimix2
 
  𝙏𝙊𝙊𝙇𝙎 𝙈𝙀𝙉𝙐 
- ${no++} ➳ ${prefix}spamcall
+ ${no++} ➳ ${prefix}spamwa
  ${no++} ➳ ${prefix}translate
  ${no++} ➳ ${prefix}ssweb-pc
  ${no++} ➳ ${prefix}ssweb-hp
@@ -726,13 +727,13 @@ return`──「 *MENU DONATE* 」──
 
 Hi *${cekName}* ${ucapanWaktu} 👋🏻
 
-*Payment Ovo*
-Number: 085789004732
-A/N: LEXXY STORE
+*Payment Gopay*
+Number: 08889616144
+A/N: Eka Fajar
 
 *Payment Dana*
-Number: 085789004732
-A/N: LEXXY OFFICIAL
+Number: 08889616144
+A/N: Eka Fajar R
 
 ${monoSpace}Terimakasih untuk kamu yang sudah donasi untuk perkembangan bot ini ^_^${monoSpace}
 
@@ -743,17 +744,16 @@ exports.infoOwner = () =>{
 return`──「 *INFO OWNER* 」──
 
  *Data Profil*
- • *Nama:* Lexxy Official
- • *Umur:* 18 tahun
- • *Hoby:* Turu/Game
- • *Askot:* Palembang
- • *Konten:* Creator
+ • *Nama:* Ekuzika OfC
+ • *Umur:* 16 tahun
+ • *Hoby:* Turu
+ • *Askot:* Jateng
 
-_iam developer bot whatsapp._
+_iam recoder bot whatsapp._
 
  *Sosial Media*
- • *Whatsapp:* 083834558105
- • *Youtube:* Lexxy Official
- • *Github:* Lexxy24
+ • *Whatsapp:* 08889616144
+ • *Instagram:* ekuzikaa_18
+ • *Github:* Rmdhn-20
  `
 }
