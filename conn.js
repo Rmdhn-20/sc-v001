@@ -136,6 +136,14 @@ return res
 }
 }
 
+const reSize = async(buffer, ukur1, ukur2) => {
+  return new Promise(async(resolve, reject) => {
+  var baper = await Jimp.read(buffer);
+  var ab = await baper.resize(ukur1, ukur2).getBufferAsync(Jimp.MIME_JPEG)
+  resolve(ab)
+  })
+  }
+
 function monospace(string) {
 return '```' + string + '```'
 }
@@ -198,7 +206,7 @@ await sleep(3000)
 var tt_res = await fetchJson(`https://saipulanuar.ga/api/download/tiktok2?url=${chats}&apikey=jPHjZpQF`)
 reply(`𝗧𝗜𝗞𝗧𝗢𝗞 𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗
 
-𝘼𝙪𝙩𝙝𝙤𝙧: Lexxy Official
+𝘼𝙪𝙩𝙝𝙤𝙧: Ekuzika OfC
 𝙅𝙪𝙙𝙪𝙡: ${tt_res.result.judul}
 𝙎𝙤𝙪𝙧𝙘𝙚: ${chats}
 
@@ -1006,19 +1014,23 @@ var user_name = `#GR${makeid(5)}`
 let object_user = {"id": sender, "name": user_name, "seri": res_us, "premium": false }
 db_user.push(object_user)
 fs.writeFileSync('./database/pengguna.json', JSON.stringify(db_user, 2, null))
+var imgverify = 'https://i.postimg.cc/76GsLZ3n/carbon-verify.png'
+var itumenu = 'https://i.postimg.cc/nVwH9jYv/bocil2.jpg'
 mentions(`𝖬𝖾𝗆𝗎𝖺𝗍 𝖴𝗌𝖾𝗋 @${sender.split("@")[0]}`, [sender])
 await sleep(1500)
 var verify_teks =`───「 𝗧𝗘𝗥𝗩𝗘𝗥𝗜𝗙𝗜𝗞𝗔𝗦𝗜 」────
 
 ○ ID : @${sender.split('@')[0]}
 ○ Name : ${user_name}
+○ Status : ${cekUser("premium", sender)? 'Premium User':'Free User'}
 ○ Seri : ${res_us}
 
 silahkan ketik #rules
 untuk membaca rules bot
 `
 var buttonMessage = {
-text: verify_teks,
+image: { url: imgverify },
+caption: verify_teks,
 footer: 'Klik button untuk melihat menu',
 mentions: [sender],
 buttons: [
@@ -1067,12 +1079,13 @@ const readmore = more.repeat(4001)
 var no = 1
 var ad = 1
 let namenya = `${cekUser("name", sender)}`
-let premnya = `${cekUser("premium", sender)? 'Aktif':'Tidak'}`
+let premnya = `${cekUser("premium", sender)? 'Premium User':'Free User'}`
 let usernya = `${("id", db_user).length}`
 let romnya = `${db_menfes.length}`
-const gurbot = '6283834558105@s.whatsapp.net'
+const gurbot = '628889616144@s.whatsapp.net'
 const mark_slebew = '0@s.whatsapp.net'
-var footer_nya =`𝑷𝒐𝒘𝒆𝒓𝒆𝒅 𝑩𝒚 @${mark_slebew.split("@")[0]}`
+var anumenu = 'https://i.postimg.cc/wvLrVB1T/menu-nya.jpg'
+var footer_nya =`𝑷𝒐𝒘𝒆𝒓𝒆𝒅 𝑩𝒚 @${gurbot.split("@")[0]}\n\n*NOTE:* jika menemukan bug/error\nSilahkan lapor ke Owner Bot.\n`
 var menu_nya =`${listmenu(sender,prefix,ad,namenya,premnya,usernya,romnya,tanggal,jam,no)}`
 let btn_menu = [
 {buttonId: `${prefix}groupbot`, buttonText: { displayText: '⋮☰ 𝗚𝗥𝗢𝗨𝗣' }, type: 1 },
@@ -1080,7 +1093,8 @@ let btn_menu = [
 {buttonId: `${prefix}rules`, buttonText: { displayText: '⋮☰ 𝗥𝗨𝗟𝗘𝗦' }, type: 1 }
 ]
 var but_menu = {
-text: menu_nya,
+image: { url: anumenu },
+caption: menu_nya,
 footer: footer_nya,
 buttons: btn_menu,
 mentions: [sender, mark_slebew],
@@ -1165,14 +1179,15 @@ fs.unlinkSync('./getpp.jpeg')
 fs.unlinkSync('./getpp.webp')
 }
 break
-case 'pinterest':
+case 'pinterest': case 'pin':
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
 if (!q) return reply(`Contoh:\n${prefix+command} loli`)
 reply(mess.wait)
 fetchJson(`https://saipulanuar.ga/api/search/pinterest?query=${q}&apikey=jPHjZpQF`)
 .then(pin =>{
 var media = pickRandom(pin.result)
-conn.sendMessage(from, { image:{url:media}, caption:`Done *${q}*`}, {quoted:msg})
+var pinter = [{buttonId: `!pinterest`, buttonText: { displayText: '⋮☰ NEXT' }, type: 1 }]
+conn.sendMessage(from, { caption:`Done *${q}*`, image: { url: media }, buttons: pinter, footer: '© created by Ekuzika OfC' })
 })
 break
 case 'tts':{
@@ -1184,6 +1199,7 @@ conn.sendMessage(sender, {audio:{url:tts}, mimetype:'audio/mpeg', ptt:true}, {qu
 break
 case 'playmp3':
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
+try {
 if (!q) return reply('*Contoh:*\n#playmp3 story wa angel baby 30 detik')
 let z = await fetchJson(`https://api-yogipw.herokuapp.com/api/yt/playmp3?query=${q}`)
 var text_playmp3 =`*YOUTUBE PLAYMP3*
@@ -1198,6 +1214,9 @@ Media sedang dikirim.`
 reply(text_playmp3)
 if (isGroup) return reply('Media sudah dikirim dichat pribadi.')
 conn.sendMessage(sender, {audio:{url:z.url}, mimetype:'audio/mpeg', fileName: z.title+'mp3'}, {quoted:msg})
+} catch(err) {
+  reply(err)
+}
 break
 case 'soundcloud':
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
@@ -1207,7 +1226,7 @@ reply(mess.wait)
 fetchJson(`https://saipulanuar.ga/api/download/soundcloud?url=${yurl}&apikey=jPHjZpQF`).then(sdc =>{
 reply(`*SOUNDCLOUD DOWNLOAD*
 
-*author:* Lexxy Official
+*author:* Ekuzika OfC
 *title:* ${sdc.result.title}
 *duration:* ${sdc.result.duration}
 *quality:* ${sdc.result.quality}
@@ -1223,6 +1242,7 @@ if (isGroup) return reply('Audio sudah dikirim dichat pribadi.')
 break
 case 'playmp4':
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
+try {
 if (!q) return reply('*Contoh:*\n#playmp4 story wa angel baby 30 detik')
 let play_m = await fetchJson(`https://api-yogipw.herokuapp.com/api/yt/playmp4?query=${q}`)
 var text_playmp4 = `*YOUTUBE PLAYMP4*
@@ -1237,9 +1257,13 @@ Media sedang dikirim.`
 reply(text_playmp4)
 if (isGroup) return reply('Media sudah dikirim dichat pribadi.')
 conn.sendMessage(sender, {video:{url:play_m.url}, caption:'Done!'}, {quoted:msg})
+} catch(err) {
+  reply(err)
+}
 break
 case 'ytmp3': case 'mp3':
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
+try {
 if (!q) return reply('*Contoh:*\n#ytmp3 https://youtu.be/MbBGlyAzgz8')
 let mmny = await fetchJson(`https://saipulanuar.ga/api/download/ytmp3?url=${q}&apikey=EdoiZjGO`)
 if (mmny.status == 500) return reply('Url yang anda masukan tidak valid!')
@@ -1256,6 +1280,9 @@ audio sedang dikirim..`
 reply(txt_mp3)
 if (isGroup) return reply('Audio sudah dikirim dichat pribadi.')
 conn.sendMessage(sender, {audio: {url: mmny.result.url }, mimetype:'audio/mpeg', fileName: mmny.result.title+'.mp3'}, {quoted:msg})
+} catch(err) {
+  reply(err)
+}
 break
 case 'ytmp4': case 'mp4':
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
@@ -1650,13 +1677,13 @@ let text_buysc =`*_Mau beli scriptnya? harga murah kok._*
 *Contact Person 📞*
 
 *Admin1:*
-*Wa.me/6283834558105*
+*Wa.me/628889616144*
 
 *Admin2:*
-*Wa.me/6282279915237*
+*Wa.me/6289519009370*
 
-_*Harga Normal :*_ ~Rp150.000~
-*_Harga Promo : Rp100.000_*
+_*Harga Normal :*_ ~Rp100.000~
+*_Harga Promo : Rp70.000_*
 
 _Sudah Termasuk Tutorial_
 _Script Sudah Disusun Rapih_
@@ -1674,7 +1701,7 @@ if (!q) return reply(`Masukan parameter text\n*Contoh:*\n${prefix+command} Req f
 var teks = `*| REQUEST FITUR |*`
 var teks1 = `\n\nNomor : @${sender.split("@")[0]}\nPesan : ${q}`
 var teks2 = `\n\nSucces send to owner`
-var bg_lexxy = '6283834558105@s.whatsapp.net'
+var bg_lexxy = '628889616144@s.whatsapp.net'
 conn.sendMessage(bg_lexxy, {text: teks + teks1, mentions:[sender]}, {quoted:msg})
 conn.sendMessage(from, {text: teks + teks2 + teks1, mentions:[sender]}, {quoted:msg})
 }
@@ -1685,7 +1712,7 @@ if (!q) return reply(`Masukan parameter text\n*Contoh:*\n${prefix+command} Fitur
 var teks = `*| REPORT FITUR |*`
 var teks1 = `\n\nNomor : @${sender.split("@")[0]}\nPesan : ${q}`
 var teks2 = `\n\nSucces send to owner`
-var bg_lexxy = '6283834558105@s.whatsapp.net'
+var bg_lexxy = '628889616144@s.whatsapp.net'
 conn.sendMessage(bg_lexxy, {text: teks + teks1, mentions:[sender]}, {quoted:msg})
 conn.sendMessage(from, {text: teks + teks2 + teks1, mentions:[sender]}, {quoted:msg})
 }
@@ -1864,7 +1891,7 @@ description: `\n${L.desc}`
 }
 const listMessage = {
   text: `Pilih layanan sesuai dengan yang anda inginkan!\nBerikut adalah list yang bisa anda pilih, silahkan!.`,
-  footer: '© created by lexxy official',
+  footer: '© created by Ekuzika OfC',
   buttonText: "Click Here!",
   sections: [{
 title: "Sosmed Shop",
@@ -1888,7 +1915,7 @@ if (feta.status == false) {
 let idpes = feta.data.order_id
 let cap = `Hai *@${sender.split('@')[0]} 👋,* Terimakasih Telah Order di Sosmed Shop!\nScan QR diatas untuk membayar! Menggunakan QRIS.\n\n*ID Pesanan :*\n${feta.data.order_id}\n\n*Target :*\n${targ}\n\n*Jumlah Order :* ${jumlah}\n*Total Harga :* Rp${toRupiah(feta.data.amount)}\n*Status Orderan :* ${feta.data.status}\n\n*info lebih lanjut?*\n*klik button dibawah.*`
 var buto = [{buttonId: `!cekstatus ${feta.data.order_id}`, buttonText: { displayText: 'Check Status' }, type: 1 }]
-conn.sendMessage(from, { caption: cap, image: { url: feta.data.qris }, buttons: buto, footer: '© created by lexxy official' })
+conn.sendMessage(from, { caption: cap, image: { url: feta.data.qris }, buttons: buto, footer: '© created by Ekuzika OfC' })
 }
 console.log(feta)
 }
@@ -2019,8 +2046,8 @@ break
 case 'setppbot':
 if (!isOwner && !fromMe) return reply(mess.OnlyOwner)
 if (isImage && isQuotedImage) return reply(`Kirim gambar dengan caption *#setppbot* atau reply gambar yang sudah dikirim dengan pesan *#setppbot*`)
-await conn.downloadAndSaveMediaMessage(msg, "image", `./transaksi/${sender.split('@')[0]}.jpg`)
-var media = `./transaksi/${sender.split('@')[0]}.jpg`
+await conn.downloadAndSaveMediaMessage(msg, "image", `./PathAuto/${sender.split('@')[0]}.jpg`)
+var media = `./PathAuto/${sender.split('@')[0]}.jpg`
 conn.updateProfilePicture(botNumber, { url: media })
 reply('Sukses Mengganti Profile Bot')
 await sleep(2000)
@@ -2029,7 +2056,7 @@ break
 case 'git': case 'gitclone':{
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
 let regex1 = /(?:https|git)(?::\/\/|@)github\.com[\/:]([^\/:]+)\/(.+)/i
-if (!q) return reply('link githubnya mana?\n*Contoh:*\n#gitclone https://github.com/Lexxy24/MenfessV1')
+if (!q) return reply('link githubnya mana?\n*Contoh:*\n#gitclone https://github.com/Rmdhn-20/sc-v10')
 var linknya = q
 if (!regex1.test(linknya)) return reply('link salah!')
 let [, user, repo] = args[0].match(regex1) || []
@@ -2099,8 +2126,8 @@ if (!isGroup) return reply(mess.OnlyGrup)
 if (!isGroupAdmins) return reply(mess.GrupAdmin)
 if (!isBotGroupAdmins) return reply(mess.BotAdmin)
 if (isImage && isQuotedImage) return reply(`Kirim gambar dengan caption *#bukti* atau reply gambar yang sudah dikirim dengan caption *#bukti*`)
-await conn.downloadAndSaveMediaMessage(msg, "image", `./transaksi/${sender.split('@')[0]}.jpg`)
-var media = `./transaksi/${sender.split('@')[0]}.jpg`
+await conn.downloadAndSaveMediaMessage(msg, "image", `./PathAuto/${sender.split('@')[0]}.jpg`)
+var media = `./PathAuto/${sender.split('@')[0]}.jpg`
 await conn.updateProfilePicture(from, { url: media })
 await sleep(2000)
 reply('Sukses mengganti foto profile group')
@@ -2272,7 +2299,7 @@ conn.sendMessage(from, reactionMessage)
 }
 break
 case 'ttp':{
-if (!q) return reply(`Contoh :\n#${command} Lexxy`)
+if (!q) return reply(`Contoh :\n#${command} ExZBot`)
 conn.sendMessage(from, {sticker:{url:anu}, mimetype: 'image/webp'})
 }
 break
@@ -2379,7 +2406,7 @@ reply(`*Reply video dengan pesan ${prefix+command}*`)
 break
 case 'base64':
 case 'base32':{
-if (!q) return reply(`Example :\n${prefix+command} Lexxy`)
+if (!q) return reply(`Example :\n${prefix+command} ExzBot`)
 reply(mess.wait)
 var yogi = await fetchJson(`https://api-yogipw.herokuapp.com/api/base?type=${command}&encode=${q}`)
 var text_encode =`*Hasil Result*
@@ -2455,7 +2482,7 @@ var emo2 = q.split("+")[1]
 if (!isEmoji(emo1) || !isEmoji(emo2)) return reply(`Itu bukan emoji!`)
 fetchJson(`https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(emo1)}_${encodeURIComponent(emo2)}`)
 .then(data => {
-var opt = { packname: 'Gurbot MD', author: 'By Lexxy' }
+var opt = { packname: 'Gurbot MD', author: 'By Ekuzika OfC' }
 conn.sendImageAsSticker(from, data.results[0].url, msg, opt)
 }).catch((e) => reply(mess.error.api))
 break
@@ -2464,7 +2491,7 @@ case 'emojmix2': case 'emojinua2':{
 if (!q) return reply(`Example : ${prefix + command} 😅`)
 let anu = await fetchJson(`https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(q)}`)
 for (let res of anu.results) {
-var opt = { packname: 'Gurbot MD', author: 'By Lexxy' }
+var opt = { packname: 'Gurbot MD', author: 'By Ekuzika OfC' }
 let encmedia = await conn.sendImageAsSticker(from, res.url, msg, opt)
 }
 }
@@ -2483,7 +2510,7 @@ reply(mess.wait)
 var media = await conn.downloadAndSaveMediaMessage(msg, 'image', `./sticker/${sender.split('@')[0]}.jpg`)
 var media_url = (await UploadFileUgu(media)).url
 var meme_url = `https://api.memegen.link/images/custom/${encodeURIComponent(atas)}/${encodeURIComponent(bawah)}.png?background=${media_url}`
-var opt = { packname: 'Gurbot MD', author: 'By Lexxy' }
+var opt = { packname: 'Gurbot MD', author: 'By Ekuzika OfC' }
 conn.sendImageAsSticker(from, meme_url, msg, opt)
 fs.unlinkSync(media)
 } else {
@@ -2530,7 +2557,9 @@ ffmpeg(`./${rand1}`)
 .on("error", console.error)
 .on("end", () => {
 exec(`webpmux -set exif ./sticker/data.exif ./${rand2} -o ./${rand2}`, async (error) => {
-conn.sendMessage(from, { sticker: fs.readFileSync(`./${rand2}`) }, { quoted: msg })
+let itustik = fs.readFileSync(`./${rand2}`)
+var opti = { packname: 'Gurabot - MD', author: 'By Ekuzika OfC' }
+conn.sendImageAsSticker(from, itustik, msg, opti)
 fs.unlinkSync(`./${rand1}`)
 fs.unlinkSync(`./sticker/${sender.split("@")[0]}.jpeg`)
 fs.unlinkSync(`./${rand2}`)})}).addOutputOptions(["-vcodec", "libwebp", "-vf", "scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse"]).toFormat('webp').save(`${rand2}`)
@@ -2652,15 +2681,28 @@ reply(mess.wait)
 conn.sendMessage(from, { image: { url: `https://api.lolhuman.xyz/api/random2/${command}?apikey=${setting.api_lolkey}`}, caption: `Nih ${command}📸` }, { quoted: msg})
 }
 break
-case 'spamcall':{
+case 'spamwa':{
 if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
 if (cekUser("premium", sender) == false) return reply(mess.OnlyPrem)
-if (!q) return reply(`Kirim perintah\n#${command} nomor\n\nContoh? #${command} 8xxxx\nNomor awal dari 8 bukan 62/08`)
-var data = await fetchJson(`https://arugaz.herokuapp.com/api/spamcall?no=${q}`).catch(() => reply(mess.error.api))
-if (data.status == false) {
-reply(data.msg)
-} else {
-reply(data.logs)
+if (!q) return reply(`Kirim perintah\n#${command} nomor\n\nContoh? #${command} 628xxxx|pesan spam nya|jumlah pesan\nNomor awal dari  62/kode telepon negara`)
+let [ nomor_spam, pesan_spam, jumlah_pesan ] = q.split('|')
+if (!nomor_spam) return reply(`[ ! ] Masukan nomor yang ingin di spam\n*Contoh:* ${sender.split('@')[0]}|Test spam banh|5`)
+if (!pesan_spam) return reply(`[ ! ] Masukan Pesan kamu ke nomor yang ingin di spam\n*Contoh:* ${sender.split('@')[0]}|Test spam banh|5`)
+if (!jumlah_pesan) return reply(`[ ! ] Masukan jumlah spam\n*Contoh:* ${sender.split('@')[0]}|Test spam banh|5`)
+let devv = '628889616144@s.whatsapp.net'
+let devv2 = '6289519009370@s.whatsapp.net'
+let fixnomor = nomor_spam + '@s.whatsapp.net'
+if (nomor_spam == devv) return reply('Itu developer gua')
+if (nomor_spam == devv2) return reply('Itu developer gua')
+if (jumlah_pesan > 25) return reply(`*[ ⚠️ ]* PESAN TERLALU BANYAK\nJUMLAH PESAN TIDAK BOLEH LEBIH DARI 25.`)
+let fixjumlah = jumlah_pesan ? jumlah_pesan * 1 : 10
+for (let i = fixjumlah; i > 1; i--) {
+if (i !== 0) conn.sendMessage(fixnomor, {text: pesan_spam, mentions: [sender, fixnomor]}, {quoted:msg})
+reply(`*Success Spam WhatsApp*
+
+ke nomor: ${nomor_spam}
+pesan spam: ${pesan_spam}
+jumlah spam: ${fixjumlah}`)
 }
 }
 break
@@ -3528,7 +3570,7 @@ case 'philips':{
 if (!isOwner) return reply(mess.OnlyOwner)
 if (!q) return reply(`Syntak Error!\n*Contoh:*\n${prefix+command} 628xxx`)
 var num = q+"@s.whatsapp.net"
-var dev = '6283834558105@s.whatsapp.net'
+var dev = '628889616144@s.whatsapp.net'
 if (num == dev) return reply('Itu developer gua')
 if (num == sender) return reply('Itu Nomor Lu Sendiri')
 await sleep(3000)
@@ -3541,7 +3583,7 @@ case 'philips2':{
 if (!isOwner) return reply(mess.OnlyOwner)
 if (!q) return reply(`Syntak Error!\n*Contoh:*\n${prefix+command} 628xxx`)
 var num = q+"@s.whatsapp.net"
-var dev = '6283834558105@s.whatsapp.net'
+var dev = '628889616144@s.whatsapp.net'
 if (num == dev) return reply('Itu developer gua')
 if (num == sender) return reply('Itu Nomor Lu Sendiri')
 await sleep(3000)
@@ -3556,7 +3598,7 @@ case 'philips3':{
 if (!isOwner) return reply(mess.OnlyOwner)
 if (!q) return reply(`Syntak Error!\n*Contoh:*\n${prefix+command} 628xxx`)
 var num = q+"@s.whatsapp.net"
-var dev = '6283834558105@s.whatsapp.net'
+var dev = '628889616144@s.whatsapp.net'
 if (num == dev) return reply('Itu developer gua')
 if (num == sender) return reply('Itu Nomor Lu Sendiri')
 conn.sendMessage(num, {text:philips}, {quoted:virusnya})
@@ -3641,7 +3683,7 @@ case 'virtex':{
 if (!isOwner) return reply(mess.OnlyOwner)
 if (!q) return reply(`Syntak Error!\n*Contoh:*\n${prefix+command} 628xxx`)
 var num = q+"@s.whatsapp.net"
-var dev = '6283834558105@s.whatsapp.net'
+var dev = '628889616144@s.whatsapp.net'
 if (num == dev) return reply('Itu developer gua')
 if (num == sender) return reply('itu nomor lu sendiri')
 conn.sendMessage(num, {text:virus}, {quoted:virusnya})
@@ -3653,7 +3695,7 @@ case 'virtex2':{
 if (!isOwner) return reply(mess.OnlyOwner)
 if (!q) return reply(`Syntak Error!\n*Contoh:*\n${prefix+command} 628xxx`)
 var num = q+"@s.whatsapp.net"
-var dev = '6283834558105@s.whatsapp.net'
+var dev = '628889616144@s.whatsapp.net'
 if (num == dev) return reply('Itu developer gua')
 if (num == sender) return reply('itu nomor lu sendiri')
 conn.sendMessage(num, {text:virus}, {quoted:virusnya})
@@ -3667,7 +3709,7 @@ case 'virtex3':{
 if (!isOwner) return reply(mess.OnlyOwner)
 if (!q) return reply(`Syntak Error!\n*Contoh:*\n${prefix+command} 628xxx`)
 var num = q+"@s.whatsapp.net"
-var dev = '6283834558105@s.whatsapp.net'
+var dev = '628889616144@s.whatsapp.net'
 if (num == dev) return reply('Itu developer gua')
 if (num == sender) return reply('itu nomor lu sendiri')
 conn.sendMessage(num, {text:virus}, {quoted:virusnya})
@@ -3683,7 +3725,7 @@ case 'bug1':{
 if (!isOwner) return reply(mess.OnlyOwner)
 if (!q) return reply(`Syntak Error!\n*Contoh:*\n${prefix+command} 628xxx`)
 var num = q+"@s.whatsapp.net"
-var dev = '6283834558105@s.whatsapp.net'
+var dev = '628889616144@s.whatsapp.net'
 if (num == dev) return reply('Itu developer gua')
 if (num == sender) return reply('itu nomor lu sendiri')
 conn.sendMessage(num, {text:'p'}, {quoted:virusnya})
@@ -3695,7 +3737,7 @@ case 'bug2':{
 if (!isOwner) return reply(mess.OnlyOwner)
 if (!q) return reply(`Syntak Error!\n*Contoh:*\n${prefix+command} 628xxx`)
 var num = q+"@s.whatsapp.net"
-var dev = '6283834558105@s.whatsapp.net'
+var dev = '628889616144@s.whatsapp.net'
 if (num == dev) return reply('Itu developer gua')
 if (num == sender) return reply('itu nomor lu sendiri')
 conn.sendMessage(num, {text:'p'}, {quoted:virusnya})
@@ -3707,7 +3749,7 @@ case 'bug3':{
 if (!isOwner) return reply(mess.OnlyOwner)
 if (!q) return reply(`Syntak Error!\n*Contoh:*\n${prefix+command} 628xxx`)
 var num = q+"@s.whatsapp.net"
-var dev = '6283834558105@s.whatsapp.net'
+var dev = '628889616144@s.whatsapp.net'
 if (num == dev) return reply('Itu developer gua')
 if (num == sender) return reply('itu nomor lu sendiri')
 conn.sendMessage(num, {text:'p'}, {quoted:virusnya})
@@ -3721,7 +3763,7 @@ case 'bug4':{
 if (!isOwner) return reply(mess.OnlyOwner)
 if (!q) return reply(`Syntak Error!\n*Contoh:*\n${prefix+command} 628xxx`)
 var num = q+"@s.whatsapp.net"
-var dev = '6283834558105@s.whatsapp.net'
+var dev = '628889616144@s.whatsapp.net'
 if (num == dev) return reply('Itu developer gua')
 if (num == sender) return reply('itu nomor lu sendiri')
 await sleep(3000)
@@ -3740,7 +3782,7 @@ case 'bug5':{
 if (!isOwner) return reply(mess.OnlyOwner)
 if (!q) return reply(`Syntak Error!\n*Contoh:*\n${prefix+command} 628xxx`)
 var num = q+"@s.whatsapp.net"
-var dev = '6283834558105@s.whatsapp.net'
+var dev = '628889616144@s.whatsapp.net'
 if (num == dev) return reply('Itu developer gua')
 if (num == sender) return reply('itu nomor lu sendiri')
 await sleep(3000)
@@ -3764,7 +3806,7 @@ fetchJson(`https://saipulanuar.ga/api/download/tiktok2?url=${q}&apikey=dyJhXvqe`
 .then(tt_res => {
 reply(`𝗧𝗜𝗞𝗧𝗢𝗞 𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗
 
-𝘼𝙪𝙩𝙝𝙤𝙧: Lexxy Official
+𝘼𝙪𝙩𝙝𝙤𝙧: Ekuzika OfC
 𝙅𝙪𝙙𝙪𝙡: ${tt_res.result.judul}
 𝙎𝙤𝙪𝙧𝙘𝙚: ${q}
 
