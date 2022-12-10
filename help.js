@@ -109,34 +109,41 @@ return`
  𝘼𝙐𝙏𝙊𝘿𝙀𝘾𝙏 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}sadcat
  ${no++} ➳ ${prefix}translate
- ${no++} ➳ ${prefix}stalkff
- ${no++} ➳ ${prefix}stalknpm
- ${no++} ➳ ${prefix}stalkgithub
- ${no++} ➳ ${prefix}stalktiktok
- ${no++} ➳ ${prefix}stalkig
  ${no++} ➳ ${prefix}balikhuruf
  ${no++} ➳ ${prefix}balikangka
  ${no++} ➳ ${prefix}besarkecil
  ${no++} ➳ ${prefix}bilangangka
 
+ 𝙎𝙏𝘼𝙇𝙆𝙀𝙍 𝙈𝙀𝙉𝙐
+ ${no++} ➳ ${prefix}stalkff
+ ${no++} ➳ ${prefix}stalknpm
+ ${no++} ➳ ${prefix}stalkgithub
+ ${no++} ➳ ${prefix}stalkig
+ ${no++} ➳ ${prefix}stalktiktok
+
  𝘿𝙊𝙒𝙉𝙇𝙊𝘼𝘿 𝙈𝙀𝙉𝙐
- ${no++} ➳ ${prefix}tiktok
+ ${no++} ➳ ${prefix}tiktokdl
  ${no++} ➳ ${prefix}ytdl
+ ${no++} ➳ ${prefix}twitter
+ ${no++} ➳ ${prefix}igfoto
+ ${no++} ➳ ${prefix}igvideo
+ ${no++} ➳ ${prefix}igreels
+ ${no++} ➳ ${prefix}igtv
+ ${no++} ➳ ${prefix}igstory
+ ${no++} ➳ ${prefix}fbdownload
  ${no++} ➳ ${prefix}pinterest
  ${no++} ➳ ${prefix}playmp3
  ${no++} ➳ ${prefix}playmp4
  ${no++} ➳ ${prefix}gitclone
  ${no++} ➳ ${prefix}mediafire
  ${no++} ➳ ${prefix}wikimedia
- ${no++} ➳ ${prefix}soundcloud
  ${no++} ➳ ${prefix}infogempa
 
  𝘾𝙊𝙉𝙑𝙀𝙍𝙏 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}tts
  ${no++} ➳ ${prefix}ttp
- ${no++} ➳ ${prefix}ttp2
  ${no++} ➳ ${prefix}attp
- ${no++} ➳ ${prefix}attp2
+ ${no++} ➳ ${prefix}semoji
  ${no++} ➳ ${prefix}tourl
  ${no++} ➳ ${prefix}upload
  ${no++} ➳ ${prefix}toimg

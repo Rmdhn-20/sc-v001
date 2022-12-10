@@ -35,6 +35,9 @@ const moment = require("moment-timezone");
 const { Primbon } = require("scrape-primbon");
 const primbon = new Primbon()
 var Jimp = require('jimp');
+var xfar = require('xfarr-api');
+const { TTScraper } = require("tiktok-scraper-ts");
+const TikTokScraper = new TTScraper();
 
 const Exif = require("./function/set_WM_Sticker")
 const exif = new Exif()
@@ -210,11 +213,15 @@ module.exports = async (conn, msg, m, setting, store) => {
       if (chats.match(/(tiktok.com)/gi)) {
         reply('Url tiktok terdekteksi\nWait mengecek data url.')
         await sleep(3000)
-        var tt_res = await fetchJson(`https://saipulanuar.ga/api/download/tiktok2?url=${chats}&apikey=jPHjZpQF`)
+        var tt_res = await fetchJson(`https://saipulanuar.ga/api/download/tiktokview?url=${chats}`)
+        if(tt_res.status == 500) return reply(`Url timdak valid cok.`)
         reply(`𝗧𝗜𝗞𝗧𝗢𝗞 𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗
 
-𝘼𝙪𝙩𝙝𝙤𝙧: Ekuzika OfC
-𝙅𝙪𝙙𝙪𝙡: ${tt_res.result.judul}
+𝘼𝙪𝙩𝙝𝙤𝙧: GuraBot - MD
+𝘿𝙚𝙨𝙠𝙧𝙞𝙥𝙨𝙞: ${tt_res.result.description}
+𝙋𝙪𝙗𝙡𝙞𝙨𝙝 𝙖𝙩: ${tt_res.result.createdAt}
+𝙇𝙞𝙠𝙚𝙨: ${tt_res.result.likesCount}
+𝙋𝙡𝙖𝙮𝙞𝙣𝙜: ${tt_res.result.playCount}
 𝙎𝙤𝙪𝙧𝙘𝙚: ${chats}
 
 Video sedang dikirim...`)
@@ -319,6 +326,9 @@ Video sedang dikirim...`)
       })
     }
 
+    let rn = ['recording','composing']
+    let jd = rn[Math.floor(Math.random() * rn.length)];
+    conn.sendPresenceUpdate(jd, from)
     conn.readMessages([msg.key])
 
     if (command === 'buatroom') {
@@ -619,23 +629,26 @@ ${data_deposit.data.trannss}`)
         let data_deposit = JSON.parse(fs.readFileSync(PathAuto + sender.split("@")[0] + ".json"))
         if (data_deposit.session === "stalktiktok") {
           data_deposit.data.usrname_ny = (chats)
-
-          var tt_stalk = await fetchJson(`https://saipulanuar.ga/api/stalk/tiktok?username=${data_deposit.data.usrname_ny}&apikey=EdoiZjGO`)
-          if (tt_stalk.result.message) return reply('Username tidak ditemukan.')
+          try {
+          const fetchUser = await TikTokScraper.user(data_deposit.data.usrname_ny);
+          console.log(fetchUser)
           data_deposit.session = "use_ttstalk";
           fs.writeFileSync(PathAuto + sender.split("@")[0] + ".json", JSON.stringify(data_deposit, null, 3));
-          var tik_text = `*TIKTOK STALKER*
-
-*Author:* Ekuzika
-*Username:* ${tt_stalk.result.name}
-*Fullname:* ${tt_stalk.result.username}
-*Followers:* ${tt_stalk.result.followers}
-*Following:* ${tt_stalk.result.following}
-*Bio:* ${tt_stalk.result.description}
-*Url:* https://tiktok.com/${tt_stalk.result.name}
+          var tik_text = `
+  ◤──•~❉Tiktok Stalk❉~•──◥ 
+  ➻ *Author:* GuraBot - MD
+  ➻ *Username:* @${fetchUser.uniqueId}
+  ➻ *Fullname:* ${fetchUser.nickname}
+  ➻ *Followers:* ${fetchUser.followers}
+  ➻ *Following:* ${fetchUser.following}
+  ➻ *Bio:* ${fetchUser.signature}
+  ◣───────•~❉❉~•───────◢ 
 `
-          conn.sendMessage(from, { image: { url: tt_stalk.result.profile }, caption: tik_text }, { quoted: msg })
+          conn.sendMessage(from, { image: { url: fetchUser.avatar }, caption: tik_text }, {quoted: msg})
           fs.unlinkSync(PathAuto + sender.split('@')[0] + '.json')
+          } catch(err) {
+            reply('Username timdack ditemukan!')
+          }
         }
       }
     } else if (command === 'stalkig') {
@@ -660,13 +673,13 @@ ${data_deposit.data.trannss}`)
         if (data_deposit.session === "stalkig") {
           data_deposit.data.name_usr = (chats)
 
-          var x_ig = await fetchJson(`https://saipulanuar.ga/api/stalk/ig?username=${data_deposit.data.name_usr}&apikey=EdoiZjGO`)
+          var x_ig = await fetchJson(`https://saipulanuar.ga/api/stalk/ig?username=${data_deposit.data.name_usr}`)
           if (x_ig.status == 500) return reply('Username tidak ditemukan.')
           data_deposit.session = "use_igstalk";
           fs.writeFileSync(PathAuto + sender.split("@")[0] + ".json", JSON.stringify(data_deposit, null, 3));
           var ig_text = `*INSTAGRAM STALKER*
 
-*Author:* Ekuzika
+*Author:* GuraBot - MD
 *Username:* ${x_ig.result.username}
 *FullName:* ${x_ig.result.fullName}
 *Followers:* ${x_ig.result.followersM}
@@ -1184,26 +1197,14 @@ _Rp100.000 - ( Topup & Fitur 600+ )_
         conn.sendMessage(from, { image: { url: buc }, caption: 'Done!' }, { quoted: msg })
       }
         break
-      case 'attp2':
-      case 'attp':
-      case 'ttp2':
-      case 'ttp': {
-        if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
-        if (!q) return reply(`Contoh:\n${prefix + command} saya wibu`)
-        var nyz1 = await getBuffer(`https://saipulanuar.ga/api/maker/${command}?text=${q}&apikey=jPHjZpQF`)
-        fs.writeFileSync('getpp.jpeg', nyz1)
-        await ffmpeg("getpp.jpeg")
-          .input("getpp.jpeg")
-          .on('error', function(error) { only("error", conn, from) })
-          .on('end', function() { conn.sendMessage(from, { sticker: { url: './getpp.webp' }, mimetype: 'image/webp' }) })
-          .addOutputOptions([`-vcodec`, `libwebp`, `-vf`, `scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`])
-          .toFormat('webp')
-          .save('./getpp.webp')
-        await sleep(5000)
-        fs.unlinkSync('./getpp.jpeg')
-        fs.unlinkSync('./getpp.webp')
-      }
-        break
+        case 'ttp': case 'attp':
+          if (!q) return reply(`Example:\n${prefix + command} exz-bot`)
+          xfar.maker.ttp(q).then( data => {
+            console.log(data)
+            var opt = { packname: 'GuraBot - MD', author: 'By Ekuzika OfC' }
+            conn.sendImageAsSticker(from, data.result, msg, opt)
+          })
+          break
       case 'pinterest': case 'pin':
         if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
         if (!q) return reply(`Contoh:\n${prefix + command} loli`)
@@ -1212,7 +1213,7 @@ _Rp100.000 - ( Topup & Fitur 600+ )_
           .then(pin => {
             var media = pickRandom(pin.result)
             var pinter = [{ buttonId: `!pinterest ${q}`, buttonText: { displayText: '⋮☰ NEXT' }, type: 1 }]
-            conn.sendMessage(from, { caption: `Done *${q}*`, image: { url: media }, buttons: pinter, footer: '© created by Ekuzika OfC' })
+            conn.sendMessage(from, { caption: `Done *${q}*`, image: { url: media }, buttons: pinter, footer: '© created by GuraBot - MD' })
           })
         break
       case 'tts': {
@@ -1237,7 +1238,6 @@ _Rp100.000 - ( Topup & Fitur 600+ )_
 
 Media sedang dikirim.`
           reply(text_playmp3)
-          if (isGroup) return reply('Media sudah dikirim dichat pribadi.')
           conn.sendMessage(sender, { audio: { url: z.url }, mimetype: 'audio/mpeg', fileName: z.title + 'mp3' }, { quoted: msg })
         } catch (err) {
           reply(err)
@@ -1248,23 +1248,27 @@ Media sedang dikirim.`
         if (!q) return reply('*Contoh:*\n#soundcloud https://soundcloud.com/ndaa-212683099/dj-coba-kau-ingat-ingat-kembali-seharusnya-aku-jungle-dutch-terbaru-2021-full-bass-viral-tik?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing')
         var yurl = q
         reply(mess.wait)
-        fetchJson(`https://saipulanuar.ga/api/download/soundcloud?url=${yurl}&apikey=jPHjZpQF`).then(sdc => {
-          reply(`*SOUNDCLOUD DOWNLOAD*
-
-*author:* Ekuzika OfC
-*title:* ${sdc.result.title}
-*duration:* ${sdc.result.duration}
-*quality:* ${sdc.result.quality}
-
-Audio sedang dikirim...
-
-*Note:*
-jika reply message status undefined
-itu artinya url tidak ditemukan.`)
-          conn.sendMessage(sender, { audio: { url: sdc.result.download }, mimetype: 'audio/mpeg', fileName: sdc.result.title + 'mp3' }, { quoted: msg })
-          if (isGroup) return reply('Audio sudah dikirim dichat pribadi.')
-        })
-        break
+        try {
+          var sdc = await fetchJson(`https://saipulanuar.ga/api/download/soundcloud?url=${yurl}&apikey=jPHjZpQF`)
+          console.log(sdc)
+            reply(`*SOUNDCLOUD DOWNLOAD*
+  
+  *author:* Ekuzika OfC
+  *title:* ${sdc.result.title}
+  *duration:* ${sdc.result.duration}
+  *quality:* ${sdc.result.quality}
+  
+  Audio sedang dikirim...
+  
+  *Note:*
+  jika reply message status undefined
+  itu artinya url tidak ditemukan.`)
+  
+            conn.sendMessage(sender, { audio: { url: sdc.result.download }, mimetype: 'audio/mpeg', fileName: sdc.result.title + '.mp3' }, { quoted: msg })
+        } catch(err) {
+          reply('Error.')
+        }
+          break
       case 'playmp4':
         if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
         try {
@@ -1280,7 +1284,6 @@ itu artinya url tidak ditemukan.`)
 
 Media sedang dikirim.`
           reply(text_playmp4)
-          if (isGroup) return reply('Media sudah dikirim dichat pribadi.')
           conn.sendMessage(sender, { video: { url: play_m.url }, caption: 'Done!' }, { quoted: msg })
         } catch (err) {
           reply(err)
@@ -1290,20 +1293,9 @@ Media sedang dikirim.`
         if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
         try {
           if (!q) return reply('*Contoh:*\n#ytmp3 https://youtu.be/MbBGlyAzgz8')
-          let mmny = await fetchJson(`https://saipulanuar.ga/api/download/ytmp3?url=${q}&apikey=EdoiZjGO`)
-          if (mmny.status == 500) return reply('Url yang anda masukan tidak valid!')
-          console.log(mmny)
-          var txt_mp3 = `*YT - MP3*
-
-*Author:* Ekuzika
-*Title:* ${mmny.result.title}
-*Viewers:* ${mmny.result.views}
-*Published:* ${mmny.result.published}
-*Channel:* ${mmny.result.channel}
-
-audio sedang dikirim..`
-          reply(txt_mp3)
-          if (isGroup) return reply('Audio sudah dikirim dichat pribadi.')
+          let mmny = await fetchJson(`https://web-production-5d68.up.railway.app/api/download/ytmp3?url=${q}&apikey=APIKEY`)
+          if (mmny.status == false) return reply('Url yang anda masukan tidak valid!')
+          console.log(mmny.result)
           conn.sendMessage(sender, { audio: { url: mmny.result.url }, mimetype: 'audio/mpeg', fileName: mmny.result.title + '.mp3' }, { quoted: msg })
         } catch (err) {
           reply(err)
@@ -1312,20 +1304,9 @@ audio sedang dikirim..`
       case 'ytmp4': case 'mp4':
         if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
         if (!q) return reply('*Contoh:*\n#ytmp4 https://youtu.be/MbBGlyAzgz8')
-        let mmm = await fetchJson(`https://saipulanuar.ga/api/download/ytmp4?url=${q}&apikey=EdoiZjGO`)
-        if (mmm.status == 500) return reply('Url yang anda masukan tidak valid!')
-        console.log(mmm)
-        var txt_mp4 = `*YT - MP4*
-
-*Author:* Ekuzika
-*Title:* ${mmm.result.title}
-*Viewers:* ${mmm.result.views}
-*Published:* ${mmm.result.published}
-*Channel:* ${mmm.result.channel}
-
-video sedang dikirim..`
-        reply(txt_mp4)
-        if (isGroup) return reply('Video sudah dikirim dichat pribadi.')
+        let mmm = await fetchJson(`https://web-production-5d68.up.railway.app/api/download/ytmp4?url=${q}&apikey=APIKEY`)
+        if (mmm.status == false) return reply('Url yang anda masukan tidak valid!')
+        console.log(mmm.result)
         conn.sendMessage(sender, { video: { url: mmm.result.url }, caption: 'Done...' }, { quoted: msg })
         break
       case 'mediafire':
@@ -1345,7 +1326,6 @@ video sedang dikirim..`
 _Wait Mengirim file..._
 `
         reply(result4)
-        if (isGroup) return reply('*document udah dikirim ke chat pribadi bot.*')
         conn.sendMessage(sender, { document: { url: baby1[0].link }, fileName: baby1[0].nama, mimetype: baby1[0].mime }, { quoted: msg }).catch((err) => reply('Gagal saat mendownload File'))
         break
       case 'grupbot':
@@ -1416,6 +1396,7 @@ ${setting.group.link}`)
         if (cekUser("premium", number_one) == true) return reply('User tersebut sudah premium')
         setUser("±premium", number_one, true)
         reply(`*PREMIUM*\n*ID:* @${number_one.split('@')[0]}\n*Status:* aktif`)
+        conn.sendMessage(number_one, {text: `Hai kak @${number_one.split("@")[0]}\n*Status Premium:* aktif`, mentions: [number_one] }, {quoted: msg})
       }
         break
       case 'delprem': {
@@ -1426,13 +1407,14 @@ ${setting.group.link}`)
         if (cekUser("premium", number_one) == false) return reply('User tersebut tidak premium')
         setUser("±premium", number_one, false)
         reply(`*PREMIUM*\n*ID:* @${number_one.split('@')[0]}\n*Status:* tidak`)
+        conn.sendMessage(number_one, {text: `Hai kak @${number_one.split("@")[0]}\n*Status Premium:* tidak aktif`, mentions: [number_one] }, {quoted: msg})
       }
         break
       case 'owner': {
         if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
         var owner_Nya = setting.ownerNumber
         sendContact(from, owner_Nya, setting.ownerName, msg)
-        reply('Chat aja kak, ga usah malu')
+        reply('Chat aja kak, ga usah malu.\nTapi jangan di spam ya!')
       }
         break
       case 'room': {
@@ -1518,7 +1500,7 @@ _• Status : ${cekUser("premium", sender) ? 'Aktif' : 'Tidak'}_`, [sender])
         let db_orang = JSON.parse(fs.readFileSync('./database/pengguna.json'));
         let data_teks = `${q}`
         for (let i of db_orang) {
-          var button_broadcast = { text: data_teks, footer: '©broadcast', buttons: [{ buttonId: '!menu', buttonText: { displayText: '⋮☰ 𝗠𝗘𝗡𝗨' }, type: 1 }], headerType: 1 }
+          var button_broadcast = { text: data_teks, footer: '© broadcast', buttons: [{ buttonId: '!menu', buttonText: { displayText: '⋮☰ 𝗠𝗘𝗡𝗨' }, type: 1 }], headerType: 1 }
           conn.sendMessage(i.id, button_broadcast)
           await sleep(2000)
         }
@@ -1528,15 +1510,14 @@ _• Status : ${cekUser("premium", sender) ? 'Aktif' : 'Tidak'}_`, [sender])
       case 'bcvideo': {
         if (!isOwner) return reply(mess.OnlyOwner)
         if (isVideo || isQuotedVideo) {
-          await conn.downloadAndSaveMediaMessage(msg, 'video', `./sticker/${sender.split("@")[0]}.mp4`)
+          var bc_vid = await conn.downloadAndSaveMediaMessage(msg, 'video', `./sticker/bcvideo.mp4`)
           reply(mess.wait)
-          var bc_video = `./sticker/${setting.ownerNumber.split('@')[0]}.mp4`
           for (let i of db_user) {
-            conn.sendMessage(i.id, { video: { url: bc_video }, caption: '*©broadcast*' })
+            conn.sendMessage(i.id, { video: { url: bc_vid }, caption: '*© broadcast*' })
             await sleep(2000)
           }
           reply(`*Sukses mengirim broadcast video ke ${db_user.length} user*`)
-          fs.unlinkSync(bc_video)
+          fs.unlinkSync(bc_vid)
         } else {
           reply(`*kirim video dengan caption ${prefix + command} atau reply video dengan pesan ${prefix + command}*`)
         }
@@ -1545,11 +1526,10 @@ _• Status : ${cekUser("premium", sender) ? 'Aktif' : 'Tidak'}_`, [sender])
       case 'bcimage': {
         if (!isOwner) return reply(mess.OnlyOwner)
         if (isImage || isQuotedImage) {
-          await conn.downloadAndSaveMediaMessage(msg, 'image', `./sticker/${sender.split("@")[0]}.jpg`)
+          var bc_img = await conn.downloadAndSaveMediaMessage(msg, 'image', `./sticker/bcimg.jpg`)
           reply(mess.wait)
-          var bc_image = `./sticker/${setting.ownerNumber.split('@')[0]}.jpg`
           for (let i of db_user) {
-            conn.sendMessage(i.id, { image: { url: bc_image }, caption: '*©broadcast*' })
+            conn.sendMessage(i.id, { image: { url: bc_img }, caption: '*© broadcast*' })
             await sleep(2000)
           }
           reply(`*Sukses mengirim broadcast image ke ${db_user.length} user*`)
@@ -1562,15 +1542,14 @@ _• Status : ${cekUser("premium", sender) ? 'Aktif' : 'Tidak'}_`, [sender])
       case 'bcaudio': {
         if (!isOwner) return reply(mess.OnlyOwner)
         if (isQuotedAudio) {
-          await conn.downloadAndSaveMediaMessage(msg, 'audio', `./sticker/${sender.split("@")[0]}.mp3`)
+           var bc_aud = await conn.downloadAndSaveMediaMessage(msg, 'audio', `./sticker/bcaudio.mp3`)
           reply(mess.wait)
-          var bc_audio = `./sticker/${setting.ownerNumber.split('@')[0]}.mp3`
           for (let i of db_user) {
-            conn.sendMessage(i.id, { audio: { url: bc_audio }, mimetype: 'audio/mpeg', fileName: 'bcaudio.mp3' })
+            conn.sendMessage(i.id, { audio: { url: bc_aud }, mimetype: 'audio/mpeg', fileName: 'bcaudio.mp3' })
             await sleep(2000)
           }
           reply(`*Sukses mengirim broadcast audio ke ${db_user.length} user*`)
-          fs.unlinkSync(bc_audio)
+          fs.unlinkSync(bc_aud)
         } else {
           reply(`*reply audio dengan pesan ${prefix + command}*`)
         }
@@ -1918,7 +1897,7 @@ _Topup & Deposit_`
         }
         const listMessage = {
           text: `Pilih layanan sesuai dengan yang anda inginkan!\nBerikut adalah list yang bisa anda pilih, silahkan!.`,
-          footer: '© created by Ekuzika OfC',
+          footer: '© created by GuraBot - MD',
           buttonText: "Click Here!",
           sections: [{
             title: "Sosmed Shop",
@@ -1942,7 +1921,7 @@ _Topup & Deposit_`
           let idpes = feta.data.order_id
           let cap = `Hai *@${sender.split('@')[0]} 👋,* Terimakasih Telah Order di Sosmed Shop!\nScan QR diatas untuk membayar! Menggunakan QRIS.\n\n*ID Pesanan :*\n${feta.data.order_id}\n\n*Target :*\n${targ}\n\n*Jumlah Order :* ${jumlah}\n*Total Harga :* Rp${toRupiah(feta.data.amount)}\n*Status Orderan :* ${feta.data.status}\n\n*info lebih lanjut?*\n*klik button dibawah.*`
           var buto = [{ buttonId: `!cekstatus ${feta.data.order_id}`, buttonText: { displayText: 'Check Status' }, type: 1 }]
-          conn.sendMessage(from, { caption: cap, image: { url: feta.data.qris }, buttons: buto, footer: '© created by Ekuzika OfC' })
+          conn.sendMessage(from, { caption: cap, image: { url: feta.data.qris }, buttons: buto, footer: '© created by GuraBot - MD' })
         }
         console.log(feta)
       }
@@ -2070,17 +2049,36 @@ _Topup & Deposit_`
         mentions(`「 *TRANSAKSI BERHASIL* 」\n\n\`\`\`📆 TANGGAL : ${tanggal}\n⌚ JAM     : ${jam}\n✨ STATUS  : Berhasil\`\`\`\n\nTerimakasih @${quotedMsg.sender.split("@")[0]} Next Order ya🙏`, [sender])
       }
         break
-      case 'setppbot':{
-        if (!isOwner && !fromMe) return reply(mess.OnlyOwner)
-        if (!quoted) throw `Kirim/Reply Image Dengan Caption ${prefix + command}`
-        await conn.downloadAndSaveMediaMessage(msg, "image", `./function/menuPath/${sender.split('@')[0]}.jpg`)
-        var media = fs.readFileSync(`./function/menuPath/${sender.split('@')[0]}.jpg`)
-        conn.updateProfilePicture(botNumber, { url: media }).catch((err) => fs.unlinkSync(media))
-        reply('Sukses Mengganti Profile Bot')
-        await sleep(2000)
-        fs.unlinkSync(media)
-        }
-        break
+        case 'setppbot': {
+          if (!isOwner && !fromMe) return reply(mess.OnlyOwner)
+          if (!isImage && !isQuotedImage) return reply(`Kirim/Reply Image Dengan Caption ${prefix + command}\n\nSet pp panjang?\n*Ketik:*\n${prefix + command} /full`)
+          var medis = await conn.downloadAndSaveMediaMessage(msg, 'image', './function/menuPath/ppbot.jpeg')
+          if (args[0] == `/full`) {
+          var { img } = await generateProfilePicture(medis)
+          await conn.query({
+          tag: 'iq',
+          attrs: {
+          to: botNumber,
+          type:'set',
+          xmlns: 'w:profile:picture'
+          },
+          content: [
+          {
+          tag: 'picture',
+          attrs: { type: 'image' },
+          content: img
+          }
+          ]
+          })
+          fs.unlinkSync(medis)
+          reply(`Sukses Oni-Chann~`)
+          } else {
+          var memeg = await conn.updateProfilePicture(botNumber, { url: medis })
+          fs.unlinkSync(medis)
+          reply(`Sukses Oni-Chann~`)
+          }
+          }
+          break
       case 'git': case 'gitclone': {
         if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
         let regex1 = /(?:https|git)(?::\/\/|@)github\.com[\/:]([^\/:]+)\/(.+)/i
@@ -2153,12 +2151,11 @@ _Topup & Deposit_`
         if (!isGroup) return reply(mess.OnlyGrup)
         if (!isGroupAdmins) return reply(mess.GrupAdmin)
         if (!isBotGroupAdmins) return reply(mess.BotAdmin)
-        if (isImage && isQuotedImage) return reply(`Kirim gambar dengan caption *#bukti* atau reply gambar yang sudah dikirim dengan caption *#bukti*`)
-        await conn.downloadAndSaveMediaMessage(msg, "image", `./function/menuPath/${sender.split('@')[0]}.jpg`)
-        var media = `./function/menuPath/${sender.split('@')[0]}.jpg`
-        await conn.updateProfilePicture(from, { url: media })
+        if (!isImage && !isQuotedImage) return reply(`Kirim gambar dengan caption *#bukti* atau reply gambar yang sudah dikirim dengan caption *#bukti*`)
+        var medigc = await conn.downloadAndSaveMediaMessage(msg, 'image', `./function/menuPath/ppgc.jpg`)
+        await conn.updateProfilePicture(from, { url: medigc })
         await sleep(2000)
-        reply('Sukses mengganti foto profile group')
+        reply('Sukses Oni-Chann~')
         fs.unlinkSync(media)
         break
       case 'setnamegrup': case 'setnamegc':
@@ -2524,6 +2521,14 @@ _Topup & Deposit_`
         }
       }
         break
+        case 'smoji': case 'semoji': {
+          if (cekUser("premium", sender) == false) return reply(mess.OnlyPrem)
+          if (!q) return reply(`Example : ${prefix + command} 😅`)
+          var emojny = await fetchJson(`https://erdwpe-api.herokuapp.com/creator/emoji2png?text=${encodeURIComponent(q)}`)
+          var optt = { packname: 'GuraBot - MD', author: 'By Ekuzika OfC' }
+          let encmed = conn.sendImageAsSticker(from, emojny.result.result, msg, optt)
+        }
+          break
       case 'smeme':
       case 'stikermeme':
       case 'stickermeme':
@@ -2734,7 +2739,7 @@ ke nomor: ${nomor_spam}
 pesan spam: ${pesan_spam}
 jumlah spam: ${jumlah_pesan}`)
         let fixjumlah = jumlah_pesan ? jumlah_pesan * 1 : 10
-        for (let i = fixjumlah; i > 1; i--) {
+        for (let i = fixjumlah; i > 0; i--) {
           if (i !== 0) conn.sendMessage(fixnomor, { text: pesan_spam, mentions: [marek_slebb] }, { quoted: ftroli })
         }
       }
@@ -3833,34 +3838,112 @@ Kedalaman :${i.depth}\n\n`
         mentions(`Sukses kirim *${command}* to @${num.split('@')[0]}`, [num])
       }
         break
-      case 'tiktok': {
-        if (!q) return reply('contoh :\n#tiktok https://vt.tiktok.com/ZSRG695C8/')
-        reply(mess.wait)
-        fetchJson(`https://saipulanuar.ga/api/download/tiktok2?url=${q}&apikey=dyJhXvqe`)
-          .then(tt_res => {
-            reply(`𝗧𝗜𝗞𝗧𝗢𝗞 𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗
-
-𝘼𝙪𝙩𝙝𝙤𝙧: Ekuzika OfC
-𝙅𝙪𝙙𝙪𝙡: ${tt_res.result.judul}
-𝙎𝙤𝙪𝙧𝙘𝙚: ${q}
-
-Video sedang dikirim...`)
-            conn.sendMessage(from, { video: { url: tt_res.result.video.link2 }, caption: 'No Watermark!' }, { quotes: msg })
-          }).catch((err) => {
-            reply('Terjadi Kesalahan!!\nUrl tidak valid')
-          })
-      }
-        break
+        case 'tiktokdl': case 'ttdl': {
+          if (!q) return reply('contoh :\n#tiktokdl https://vt.tiktok.com/ZSRG695C8/')
+          reply(mess.wait)
+          try {
+          var ttdl_res = await fetchJson(`https://violetics.pw/api/downloader/tiktok?apikey=beta&url=${q}`)
+          if (ttdl_res.status == 500) return reply(`Url timdak valid cok.`)
+          var tiktod = ttdl_res.result.meta
+          let tdl = `
+    ┍────────────◉
+    ︱⊦⊸ 𝘼𝙪𝙩𝙝𝙤𝙧: GuraBot - MD
+    ︱⊦⊸ 𝘿𝙚𝙨𝙠𝙧𝙞𝙥𝙨𝙞: ${tiktod.title}
+    ︱⊦⊸ 𝘿𝙪𝙧𝙖𝙩𝙞𝙤𝙣: ${tiktod.duration}
+    ︱⊦⊸ 𝙎𝙤𝙪𝙧𝙘𝙚: ${tiktod.source}
+    ┕─────◉
+  `
+  let btn_ttdl = [
+    { buttonId: `${prefix}ttmp3 ${q}`, buttonText: { displayText: '⋮☰ AUDIO' }, type: 1 },
+    { buttonId: `${prefix}ttmp4 ${q}`, buttonText: { displayText: '⋮☰ VIDEO NO WM' }, type: 1 }
+  ]
+  var but_ttdl = {
+    image: { url: ttdl_res.result.thumb },
+    caption: '     ❒ 𝗧𝗜𝗞𝗧𝗢𝗞 𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗 ❒',
+    footer: tdl,
+    buttons: btn_ttdl,
+    mentions: [sender],
+    headerType: 4
+  }
+              conn.sendMessage(from, but_ttdl, {quoted:msg})
+            } catch(err) {
+              reply('Terjadi Kesalahan!!\nUrl tidak valid')
+            }
+        }
+          break
+          case 'ttmp4': {
+            if (!q) return reply( `Example : ${prefix + command} link`)
+if (!q.includes('tiktok.com')) return reply(`Link Invalid!!`)
+reply(mess.wait)
+require('./function/tiktok').Tiktok(q).then( data => {
+conn.sendMessage(from, { video: { url: data.nowm }}, { quoted: msg })
+})
+}
+break
+          case 'ttmp3':
+            if(!q) return reply('Mana url nya')
+            require('./function/tiktok').Tiktok(q).then( data => {
+              conn.sendMessage(from, { audio: { url: data.audio }, mimetype: 'audio/mp4', fileName: data.title + '.mp3' }, { quoted: msg })
+            })
+            break
+            case 'igfoto': case 'igvideo': case 'igvid': case 'igreels': case 'igreel': case 'igtv': {
+              if (!q) return reply(`Link nya mana?\n*contoh:*\nhttps://www.instagram.com/reel/CSa7MWrlgri/`)
+              if (!q.includes('instagram')) return reply(`Link timdack valid.`)
+              const instagramGetUrl = require("instagram-url-direct")
+              const results = (await instagramGetUrl(q)).url_list[0]
+              console.log(results)
+              reply(mess.wait)
+              if (results.includes('mp4')){
+              conn.sendMessage(from, { video: { url: results }, caption: '*Done !*'}, {quoted:msg})
+              } else {
+                conn.sendMessage(from, { image: { url: results }, caption: '*Done !*' }, {quoted:msg})
+              }
+              }
+              break
+              case 'igstory': case 'igs':
+            if (!q) return reply(`url story nya? Contoh :\n${prefix + command} https://www.instagram.com/stories/btr_citraaa/2989344688605937050/`)
+              if (!q.includes('instagram')) return reply(`Link timdack valid.`)
+var igs = await fetchJson(`https://api.xteam.xyz/dl/igs?url=${q}&APIKEY=apikeyaine`)
+if (igs.code == 400) return reply(`url story timdack valid.`)
+try {
+for(let i of igs.result){
+  console.log(igs)
+if(i.url.includes('mp4')){
+conn.sendMessage(from, {video:{url:i.url}, caption:`Type : ${i.type}`, mimetype:'video/mp4'}, {quoted:msg})
+} else {
+  conn.sendMessage(from, {image:{url:i.url}, caption:`Type : ${i.type}`}, {quoted:msg})
+}}
+} catch(err) {
+  reply(`Story timdack ditemukan.`)
+};
+   break
+   case 'fbdownload': case 'fb':
+    if (!q) return reply(`Example:\n${prefix + command} https://www.facebook.com/botikaonline/videos/837084093818982`)
+    if (!q.includes('facebook.com')) return reply(`Itu bukan link facebook!`)
+    var fbd = await fetchJson(`https://api.xteam.xyz/dl/fbv2?url=${q}&APIKEY=apikeyaine`)
+    if (fbd.result.status == false) return reply(`Link timdack valid.`)
+    for(let fbdl of fbd.result.url){
+    conn.sendMessage(from, { video: { url: fbdl.url }, caption: '*Done !*'}, { quoted: msg})
+    }
+    break
+              case 'twitter': case 'twit': case 'twitt': {
+              if (!q) return reply( `Example : ${prefix + command} link`)
+    if (!q.includes('twitter')) return reply(`Link Invalid!!`)
+    reply(mess.wait)
+    let anunya = await xfar.downloader.twitter(q)
+    conn.sendMessage(from, { video: { url: anunya.quality_720}, caption: anunya.caption }, { quoted: msg })
+    }
+    break
       case 'ytdl':
         if (cekUser("id", sender) == null) return reply(mess.OnlyUser)
         if (!q) return reply('*Contoh:*\n#ytdl https://youtu.be/watyplEMt90')
         reply(mess.wait)
-        var yytt = await fetchJson(`https://saipulanuar.ga/api/download/ytmp4?url=${q}&apikey=EdoiZjGO`)
-        if (yytt.status == 500) return reply('Url yang anda masukan tidak valid!')
-        console.log(yytt)
+        var yytt = await fetchJson(`https://web-production-5d68.up.railway.app/api/download/ytmp4?url=${q}&apikey=APIKEY`)
+        if (yytt.status == false) return reply('Url yang anda masukan tidak valid!')
+        console.log(yytt.result)
         var txt_ytdl = `*YT - DOWNLOADER*
 
-*Author:* Ekuzika
+*Author:* GuraBot - MD
 *Title:* ${yytt.result.title}
 *Viewers:* ${yytt.result.views}
 *Published:* ${yytt.result.published}
@@ -3873,7 +3956,8 @@ Video sedang dikirim...`)
           { buttonId: `${prefix}ytmp4 ${q}`, buttonText: { displayText: '⋮☰ VIDEO' }, type: 1 }
         ]
         var but_menu = {
-          text: txt_ytdl,
+          image: { url: yytt.result.thumb },
+          caption: txt_ytdl,
           footer: 'Klik tombol dibawah untuk mendownload media',
           buttons: btn_ytdl,
           mentions: [sender, marek],
