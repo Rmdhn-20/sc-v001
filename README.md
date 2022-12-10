@@ -135,11 +135,11 @@ npm start
 ⭝ Orang Tua
 ⭝ Ayang Gw
 ⭝ Mastah - Mastah
+
 ⫹⫺ 𝑇𝒉𝑒 𝑁𝑎𝑚𝑒 𝑇𝒉𝑎𝑡 𝐻𝑒𝑙𝑝𝑒𝑑 𝑀𝑒 ⫹⫺
 ⸔⸔⸔⸔⸔⸔⸔⸔⸔⸔⸔⸔⸔⸔⸔⸔⸔⸔⸔⸔
 ⭝ Lexxy Official
 ⭝ Thoriq Azzikraa
 ⭝ Penyedia Module
 ⭝ Penyedia RestApi
-⭝ Ayang Gw (thx for support)
 ⭝ Pengguna Sc Ini
