@@ -2323,11 +2323,6 @@ _Topup & Deposit_`
         conn.sendMessage(from, reactionMessage)
       }
         break
-      case 'ttp': {
-        if (!q) return reply(`Contoh :\n#${command} ExZBot`)
-        conn.sendMessage(from, { sticker: { url: anu }, mimetype: 'image/webp' })
-      }
-        break
       case 'sound1': case 'sound2':
       case 'sound3': case 'sound4': case 'sound5': case 'sound6':
       case 'sound7': case 'sound8': case 'sound9': case 'sound10':
