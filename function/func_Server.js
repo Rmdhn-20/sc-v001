@@ -1,7 +1,18 @@
 "use strict";
 const axios = require("axios");
 const fs = require("fs");
-const fetch = require('node-fetch')
+const fetch = require('node-fetch');
+const Jimp = require("jimp");
+
+// exports Generate PP
+exports.generateProfilePicture = async(buffer) => {
+    const jimp_1 = await Jimp.read(buffer);
+    const resz = jimp_1.getWidth() > jimp_1.getHeight() ? jimp_1.resize(550, Jimp.AUTO) : jimp_1.resize(Jimp.AUTO, 650)
+    const jimp_2 = await Jimp.read(await resz.getBufferAsync(Jimp.MIME_JPEG));
+    return {
+    img: await resz.getBufferAsync(Jimp.MIME_JPEG)
+    }
+    }
 
 // exports serialize
 exports.serialize = (conn, msg) => {
