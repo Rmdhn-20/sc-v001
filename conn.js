@@ -31,6 +31,7 @@ const qs = require("querystring");
 const fetch = require("node-fetch");
 const colors = require('colors/safe');
 const ffmpeg = require("fluent-ffmpeg");
+const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const moment = require("moment-timezone");
 const { Primbon } = require("scrape-primbon");
 const primbon = new Primbon()
@@ -38,6 +39,7 @@ var Jimp = require('jimp');
 var xfar = require('xfarr-api');
 const { TTScraper } = require("tiktok-scraper-ts");
 const TikTokScraper = new TTScraper();
+ffmpeg.setFfmpegPath(ffmpegPath);
 
 const Exif = require("./function/set_WM_Sticker")
 const exif = new Exif()
@@ -212,21 +214,35 @@ module.exports = async (conn, msg, m, setting, store) => {
     if (isGroup && isAutoDownTT) {
       if (chats.match(/(tiktok.com)/gi)) {
         reply('Url tiktok terdekteksi\nWait mengecek data url.')
-        await sleep(3000)
-        var tt_res = await fetchJson(`https://saipulanuar.ga/api/download/tiktokview?url=${chats}`)
-        if(tt_res.status == 500) return reply(`Url timdak valid cok.`)
-        reply(`𝗧𝗜𝗞𝗧𝗢𝗞 𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗
-
-𝘼𝙪𝙩𝙝𝙤𝙧: GuraBot - MD
-𝘿𝙚𝙨𝙠𝙧𝙞𝙥𝙨𝙞: ${tt_res.result.description}
-𝙋𝙪𝙗𝙡𝙞𝙨𝙝 𝙖𝙩: ${tt_res.result.createdAt}
-𝙇𝙞𝙠𝙚𝙨: ${tt_res.result.likesCount}
-𝙋𝙡𝙖𝙮𝙞𝙣𝙜: ${tt_res.result.playCount}
-𝙎𝙤𝙪𝙧𝙘𝙚: ${chats}
-
-Video sedang dikirim...`)
-        conn.sendMessage(sender, { video: { url: tt_res.result.video.link1 }, caption: 'No Watermark!' }, { quotes: msg })
-        if (isGroup) return conn.sendMessage(from, { text: 'Media sudah dikirim lewat chat pribadi bot.' }, { quoted: msg })
+        await sleep(1000)
+        try {
+          var ttdl_auto = await fetchJson(`https://violetics.pw/api/downloader/tiktok?apikey=beta&url=${chats}`)
+          if (ttdl_auto.status == 500) return reply(`Url timdak valid cok.`)
+          var tiktaut = ttdl_auto.result.meta
+          let taudl = `
+    ┍────────────◉
+    ︱⊦⊸ 𝘼𝙪𝙩𝙝𝙤𝙧: GuraBot - MD
+    ︱⊦⊸ 𝘿𝙚𝙨𝙠𝙧𝙞𝙥𝙨𝙞: ${tiktaut.title}
+    ︱⊦⊸ 𝘿𝙪𝙧𝙖𝙩𝙞𝙤𝙣: ${tiktaut.duration}
+    ︱⊦⊸ 𝙎𝙤𝙪𝙧𝙘𝙚: ${tiktaut.source}
+    ┕─────◉
+  `
+  let btn_ttaut = [
+    { buttonId: `${prefix}ttmp3 ${chats}`, buttonText: { displayText: '⋮☰ AUDIO' }, type: 1 },
+    { buttonId: `${prefix}ttmp4 ${chats}`, buttonText: { displayText: '⋮☰ VIDEO NO WM' }, type: 1 }
+  ]
+  var but_ttaut = {
+    image: { url: ttdl_auto.result.thumb },
+    caption: '     ❒ 𝗧𝗜𝗞𝗧𝗢𝗞 𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗 ❒',
+    footer: taudl,
+    buttons: btn_ttaut,
+    mentions: [sender],
+    headerType: 4
+  }
+              conn.sendMessage(sender, but_ttaut, {quoted:msg})
+            } catch(err) {
+              reply('Terjadi Kesalahan!!\nUrl tidak valid')
+            }
       }
     }
 
@@ -1049,6 +1065,7 @@ updated : ${git.updated_at}`
         if (cekUser("id", sender) !== null) return reply('Kamu sudah terdaftar !!')
         var res_us = `${makeid(10)}`
         var user_name = `#GR${makeid(5)}`
+        var ownum = `628889616144@s.whatsapp.net`
         let object_user = { "id": sender, "name": user_name, "seri": res_us, "premium": false }
         db_user.push(object_user)
         fs.writeFileSync('./database/pengguna.json', JSON.stringify(db_user, 2, null))
@@ -1077,6 +1094,7 @@ untuk membaca rules bot
           headerType: 1
         }
         conn.sendMessage(from, buttonMessage, { quoted: msg })
+        conn.sendMessage(ownum, { text: `New User Register!\n○ ID : @${sender.split('@')[0]}`, mentions: [sender, ownum] }, {quoted:msg})
       }
         break
       case 'iklan': {
@@ -1090,12 +1108,12 @@ _Utamakan chat to the point_ 🚀
 
 ${strip}Telpon/Spam blokir 🚫${strip}
 
-_Admin 1 : 0838-3455-8105_
-_Admin 2 : 0822-7991-5237_
+_Admin 1 : 0888-9616-144_
+_Admin 2 : 0895-1900-9370_
 
 *SCRIPT BOT 🛒*
-_Rp50.000 - ( Topup & Fitur 300+ )_
-_Rp100.000 - ( Topup & Fitur 600+ )_
+_Rp25.000 - ( Fitur 300+ )_
+_Rp60.000 - ( Fitur 600+ )_
 
 *_Ready Nokos Whatsapp +1_*
 *_Harga Murah? Chat Admin_*
@@ -1123,16 +1141,15 @@ _Rp100.000 - ( Topup & Fitur 600+ )_
         const gurbot = '628889616144@s.whatsapp.net'
         const mark_slebew = '0@s.whatsapp.net'
         var anumenu = 'https://i.postimg.cc/wvLrVB1T/menu-nya.jpg'
-        var footer_nya = `𝑷𝒐𝒘𝒆𝒓𝒆𝒅 𝑩𝒚 @${gurbot.split("@")[0]}\n\n*NOTE:* jika menemukan bug/error\nSilahkan lapor ke Owner Bot.\n`
-        var menu_nya = `${listmenu(sender, prefix, ad, namenya, premnya, usernya, romnya, tanggal, jam, no)}`
+        var footer_nya = `\n𝑷𝒐𝒘𝒆𝒓𝒆𝒅 𝑩𝒚 @${gurbot.split("@")[0]}\n\n*NOTE:* jika menemukan bug/error\nSilahkan lapor ke Owner Bot.\n`
+        var menu_nya = `${listmenu(sender, prefix, ad, namenya, premnya, usernya, romnya, tanggal, jam, no, readmore)}`
         let btn_menu = [
           { buttonId: `${prefix}groupbot`, buttonText: { displayText: '⋮☰ 𝗚𝗥𝗢𝗨𝗣' }, type: 1 },
           { buttonId: `${prefix}owner`, buttonText: { displayText: '⋮☰ 𝗢𝗪𝗡𝗘𝗥' }, type: 1 },
           { buttonId: `${prefix}rules`, buttonText: { displayText: '⋮☰ 𝗥𝗨𝗟𝗘𝗦' }, type: 1 }
         ]
         var but_menu = {
-          image: { url: anumenu },
-          caption: menu_nya,
+          text: menu_nya,
           footer: footer_nya,
           buttons: btn_menu,
           mentions: [sender, mark_slebew],
@@ -1197,9 +1214,17 @@ _Rp100.000 - ( Topup & Fitur 600+ )_
         conn.sendMessage(from, { image: { url: buc }, caption: 'Done!' }, { quoted: msg })
       }
         break
-        case 'ttp': case 'attp':
+        case 'ttp': 
           if (!q) return reply(`Example:\n${prefix + command} exz-bot`)
           xfar.maker.ttp(q).then( data => {
+            console.log(data)
+            var opt = { packname: 'GuraBot - MD', author: 'By Ekuzika OfC' }
+            conn.sendImageAsSticker(from, data.result, msg, opt)
+          })
+          break
+       case 'attp':
+          if (!q) return reply(`Example:\n${prefix + command} exz-bot`)
+          xfar.maker.attp(q).then( data => {
             console.log(data)
             var opt = { packname: 'GuraBot - MD', author: 'By Ekuzika OfC' }
             conn.sendImageAsSticker(from, data.result, msg, opt)
