@@ -4,9 +4,9 @@
 
 var monoSpace = '```'
 
-exports.listmenu = (sender,prefix,ad,namenya,premnya,usernya,romnya,tanggal,jam,no) => {
+exports.listmenu = (sender,prefix,ad,namenya,premnya,usernya,romnya,tanggal,jam,no,readmore) => {
 return`
-━━━━━〔 𝙂𝙐𝙍𝘽𝙊𝙏-𝙈𝘿 〕━━━
+━━━〔 𝙂𝙐𝙍𝘼𝘽𝙊𝙏-𝙈𝘿 〕━━━
 
  𝗨𝗦𝗘𝗥 𝗜𝗡𝗙𝗢
  ID : @${sender.split('@')[0]}
@@ -19,8 +19,8 @@ return`
  Date : ${tanggal}
  Terdaftar : ${usernya}
  Room Chat : ${romnya}
- Total Fitur : 600+
-
+ Total Fitur : 600++
+${readmore}
  𝙈𝘼𝙄𝙉 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}menu
  ${no++} ➳ ${prefix}iklan
@@ -36,7 +36,7 @@ return`
  ${no++} ➳ ${prefix}groupbot
  ${no++} ➳ ${prefix}ownerinfo
  ${no++} ➳ ${prefix}infoowner
-
+${readmore}
  𝙐𝙎𝙀𝙍 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}verify
  ${no++} ➳ ${prefix}report
@@ -48,7 +48,7 @@ return`
  ${no++} ➳ ${prefix}cekprem
  ${no++} ➳ ${prefix}daftarprem
  ${no++} ➳ ${prefix}changename
-
+${readmore}
  𝙊𝙒𝙉𝙀𝙍 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}error
  ${no++} ➳ ${prefix}clearerr
@@ -69,7 +69,7 @@ return`
  ${no++} ➳ ${prefix}bcaudio
  ${no++} ➳ ${prefix}bcimage
  ${no++} ➳ ${prefix}broadcast
-
+${readmore}
  𝙎𝙏𝙊𝙍𝙀 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}kali 1 2
  ${no++} ➳ ${prefix}bagi 1 2
@@ -82,7 +82,7 @@ return`
  ${no++} ➳ ${prefix}proses <reply orderan>
  ${no++} ➳ ${prefix}list <only group>
  ${no++} ➳ ${prefix}shop <only group>
- 
+ ${readmore}
  𝙂𝙍𝙊𝙐𝙋 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}fitnah
  ${no++} ➳ ${prefix}delete
@@ -105,7 +105,7 @@ return`
  ${no++} ➳ ${prefix}kick @tag
  ${no++} ➳ ${prefix}demote @tag
  ${no++} ➳ ${prefix}promote @tag
- 
+ ${readmore}
  𝘼𝙐𝙏𝙊𝘿𝙀𝘾𝙏 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}sadcat
  ${no++} ➳ ${prefix}translate
@@ -113,14 +113,14 @@ return`
  ${no++} ➳ ${prefix}balikangka
  ${no++} ➳ ${prefix}besarkecil
  ${no++} ➳ ${prefix}bilangangka
-
+${readmore}
  𝙎𝙏𝘼𝙇𝙆𝙀𝙍 𝙈𝙀𝙉𝙐
  ${no++} ➳ ${prefix}stalkff
  ${no++} ➳ ${prefix}stalknpm
  ${no++} ➳ ${prefix}stalkgithub
  ${no++} ➳ ${prefix}stalkig
  ${no++} ➳ ${prefix}stalktiktok
-
+${readmore}
  𝘿𝙊𝙒𝙉𝙇𝙊𝘼𝘿 𝙈𝙀𝙉𝙐
  ${no++} ➳ ${prefix}tiktokdl
  ${no++} ➳ ${prefix}ytdl
@@ -138,7 +138,7 @@ return`
  ${no++} ➳ ${prefix}mediafire
  ${no++} ➳ ${prefix}wikimedia
  ${no++} ➳ ${prefix}infogempa
-
+${readmore}
  𝘾𝙊𝙉𝙑𝙀𝙍𝙏 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}tts
  ${no++} ➳ ${prefix}ttp
@@ -173,7 +173,7 @@ return`
  ${no++} ➳ ${prefix}mixemoji2
  ${no++} ➳ ${prefix}emojmix2
  ${no++} ➳ ${prefix}emojimix2
-
+${readmore}
  𝙏𝙊𝙊𝙇𝙎 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}spamwa
  ${no++} ➳ ${prefix}translate
@@ -186,7 +186,7 @@ return`
  ${no++} ➳ ${prefix}base64
  ${no++} ➳ ${prefix}debase32
  ${no++} ➳ ${prefix}debase64
-
+${readmore}
  𝘽𝙐𝙂𝙑𝙄𝙋 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}sendbug 628xxx
  ${no++} ➳ ${prefix}philips 628xxx
@@ -203,7 +203,7 @@ return`
  ${no++} ➳ ${prefix}bug3 628xxx
  ${no++} ➳ ${prefix}bug4 628xxx
  ${no++} ➳ ${prefix}bug5 628xxx
- 
+ ${readmore}
  𝙍𝘼𝙉𝘿𝙊𝙈 𝘾𝙀𝙆 
  ${no++} ➳ ${prefix}cekjelek
  ${no++} ➳ ${prefix}cekcantik
@@ -229,33 +229,27 @@ return`
  ${no++} ➳ ${prefix}cekimut
  ${no++} ➳ ${prefix}cekkocak
  ${no++} ➳ ${prefix}cekkadang
-
+${readmore}
  𝙎𝙀𝙍𝙏𝙄𝙁𝙄𝙆𝘼𝙏 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}toloserti <nama>
  ${no++} ➳ ${prefix}badgirlserti <nama>
  ${no++} ➳ ${prefix}goodgirlserti <nama>
  ${no++} ➳ ${prefix}fuckgirlserti <nama>
  ${no++} ➳ ${prefix}bucinserti <nama>
- 
+ ${readmore}
  𝙇𝙊𝙂𝙊 𝙈𝘼𝙆𝙀𝙍 
- ${no++} ➳ ${prefix}joker
- ${no++} ➳ ${prefix}digital
- ${no++} ➳ ${prefix}nulis
- ${no++} ➳ ${prefix}nulis2
- ${no++} ➳ ${prefix}quoteser
- ${no++} ➳ ${prefix}quobucin
  ${no++} ➳ ${prefix}rem
  ${no++} ➳ ${prefix}girlneko
  ${no++} ➳ ${prefix}sadboy
  ${no++} ➳ ${prefix}kaneki
  ${no++} ➳ ${prefix}lolimaker
-
+${readmore}
  𝘼𝙉𝙊𝙉𝙔𝙈𝙊𝙐𝙎 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}buatroom 628xxx
  ${no++} ➳ ${prefix}room <only owner>
  ${no++} ➳ ${prefix}stopchat <only room>
  ${no++} ➳ ${prefix}menfess 628xx|bot|hai
-
+${readmore}
  𝙎𝙊𝙎𝙈𝙀𝘿 𝙎𝙃𝙊𝙋 
  ${no++} ➳ ${prefix}pricelist <layanan>
  ${no++} ➳ ${prefix}order <cara order>
@@ -265,14 +259,14 @@ return`
  ${no++} ➳ ${prefix}cekstatus <idtrx>
  ${no++} ➳ ${prefix}komisi <owner only>
  ${no++} ➳ ${prefix}tarikkomisi <owner only>
- 
+ ${readmore}
  𝙑𝙊𝙆𝘼𝙇 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}hilih <text>
  ${no++} ➳ ${prefix}halah <text>
  ${no++} ➳ ${prefix}huluh <text>
  ${no++} ➳ ${prefix}heleh <text>
  ${no++} ➳ ${prefix}holoh <text>
- 
+ ${readmore}
  𝙍𝘼𝙉𝘿𝙊𝙈 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}cecan
  ${no++} ➳ ${prefix}cogan
@@ -283,7 +277,7 @@ return`
  ${no++} ➳ ${prefix}wallhp
  ${no++} ➳ ${prefix}tatasurya
  ${no++} ➳ ${prefix}programing
-
+${readmore}
  𝙋𝙍𝙄𝙈𝘽𝙊𝙉 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}ramaljodoh
  ${no++} ➳ ${prefix}ramalanjodoh
@@ -302,14 +296,14 @@ return`
  ${no++} ➳ ${prefix}kecocokannama
  ${no++} ➳ ${prefix}cocokpasangan
  ${no++} ➳ ${prefix}kecocokanpasangan
-
+${readmore}
  𝘼𝙎𝙐𝙋𝘼𝙉 𝙂𝘼𝘾𝙃𝘼 
  ${no++} ➳ ${prefix}rika
  ${no++} ➳ ${prefix}bocil
  ${no++} ➳ ${prefix}ukhty
  ${no++} ➳ ${prefix}santuy
  ${no++} ➳ ${prefix}hijaber
-
+${readmore}
  𝘼𝙐𝘿𝙄𝙊 𝘾𝙃𝘼𝙉𝙂𝙀𝙍 
  ${no++} ➳ ${prefix}fat
  ${no++} ➳ ${prefix}fast
@@ -323,7 +317,7 @@ return`
  ${no++} ➳ ${prefix}earrape
  ${no++} ➳ ${prefix}reverse
  ${no++} ➳ ${prefix}nightcore
-
+${readmore}
  𝙄𝙉𝙁𝙊𝙍𝙈𝘼𝙏𝙄𝙊𝙉 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}gempa
  ${no++} ➳ ${prefix}jadwaltv
@@ -331,7 +325,7 @@ return`
  ${no++} ➳ ${prefix}bioskopnow
  ${no++} ➳ ${prefix}latintoaksara
  ${no++} ➳ ${prefix}aksaratolatin
-
+${readmore}
  𝙍𝘼𝙉𝘿𝙊𝙈 𝙎𝙏𝙄𝘾𝙆𝙀𝙍 
  ${no++} ➳ ${prefix}dadu
  ${no++} ➳ ${prefix}anjing
@@ -339,7 +333,7 @@ return`
  ${no++} ➳ ${prefix}bucinstick
  ${no++} ➳ ${prefix}gawrgura
  ${no++} ➳ ${prefix}amongus
-
+${readmore}
  𝘼𝙐𝘿𝙄𝙊 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}audio${ad++}
  ${no++} ➳ ${prefix}audio${ad++}
@@ -361,7 +355,7 @@ return`
  ${no++} ➳ ${prefix}audio${ad++}
  ${no++} ➳ ${prefix}audio${ad++}
  ${no++} ➳ ${prefix}audio${ad++}
- 
+ ${readmore}
  𝙁𝙐𝙉 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}goblokcek 
  ${no++} ➳ ${prefix}jelekcek 
@@ -390,7 +384,7 @@ return`
  ${no++} ➳ ${prefix}fakgirlcek
  ${no++} ➳ ${prefix}kerencek
  ${no++} ➳ ${prefix}wibucek
-
+${readmore}
  𝙒𝘼𝙇𝙇𝙋𝘼𝙋𝙀𝙍 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}milf
  ${no++} ➳ ${prefix}loli
@@ -407,7 +401,7 @@ return`
  ${no++} ➳ ${prefix}wallpaperprogamer
  ${no++} ➳ ${prefix}wallpaperteknologi
  ${no++} ➳ ${prefix}wallpapercyber
-
+${readmore}
  𝘼𝙉𝙄𝙈𝙀 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}cry
  ${no++} ➳ ${prefix}hug
@@ -434,7 +428,7 @@ return`
  ${no++} ➳ ${prefix}smug
  ${no++} ➳ ${prefix}smile
  ${no++} ➳ ${prefix}bonk
-
+${readmore}
  𝘾𝙀𝙍𝙋𝙀𝙉 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}cerpen-sejarah
  ${no++} ➳ ${prefix}cerpen-sedih
@@ -484,7 +478,7 @@ return`
  ${no++} ➳ ${prefix}cerpen-bahasainggris
  ${no++} ➳ ${prefix}cerpen-bahasadaerah
  ${no++} ➳ ${prefix}cerpen-anak
-
+${readmore}
  𝙉𝙎𝙁𝙒 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}yuri
  ${no++} ➳ ${prefix}ero
@@ -523,7 +517,7 @@ return`
  ${no++} ➳ ${prefix}biganimetiddies
  ${no++} ➳ ${prefix}animebellybutton
  ${no++} ➳ ${prefix}hentai4everyone
-
+${readmore}
  𝙎𝙊𝙐𝙉𝘿 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}sound1
  ${no++} ➳ ${prefix}sound2
@@ -599,7 +593,7 @@ return`
  ${no++} ➳ ${prefix}sound72
  ${no++} ➳ ${prefix}sound73
  ${no++} ➳ ${prefix}sound74
-
+${readmore}
  𝙏𝙀𝙓𝙏𝙋𝙍𝙊 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}metallic text
  ${no++} ➳ ${prefix}naruto text
@@ -633,7 +627,7 @@ return`
  ${no++} ➳ ${prefix}arcade8bit text1 text2
  ${no++} ➳ ${prefix}battlefield4 text1 text2
  ${no++} ➳ ${prefix}pubg text1 text2
-
+${readmore}
  𝙀𝙋𝙃𝙊𝙏𝙊 𝙈𝙀𝙉𝙐 
  ${no++} ➳ ${prefix}wetglass text
  ${no++} ➳ ${prefix}multicolor3d text
@@ -665,7 +659,7 @@ return`
  ${no++} ➳ ${prefix}goldplaybutton text
  ${no++} ➳ ${prefix}silverplaybutton text
  ${no++} ➳ ${prefix}freefire text
-
+${readmore}
  𝙍𝘼𝙉𝘿𝙊𝙈 𝙄𝙈𝘼𝙂𝙀 
  ${no++} ➳ ${prefix}bj
  ${no++} ➳ ${prefix}ero
@@ -753,7 +747,7 @@ return`──「 *INFO OWNER* 」──
  *Data Profil*
  • *Nama:* Ekuzika OfC
  • *Umur:* 16 tahun
- • *Hoby:* Turu
+ • *Hoby:* Mangan, Turu, Ngopi
  • *Askot:* Jateng
 
 _iam recoder bot whatsapp._
