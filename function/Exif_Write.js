@@ -1,11 +1,14 @@
 // BY IRFAN/RTWONE
+// FIX BY EKUZIKA
 
 const fs = require('fs')
 const { tmpdir } = require("os")
 const Crypto = require("crypto")
 const ff = require('fluent-ffmpeg')
+const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const webp = require("node-webpmux")
 const path = require("path")
+ff.setFfmpegPath(ffmpegPath);
 
 async function imageToWebp(media) {
 
@@ -115,4 +118,4 @@ async function writeExifVid (media, metadata) {
 }
 
 
-module.exports = { writeExifImg, writeExifVid }
+module.exports = { imageToWebp, videoToWebp, writeExifImg, writeExifVid }
