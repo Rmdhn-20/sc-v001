@@ -1,10 +1,10 @@
 {
   "name": "Bot",
-  "version": "0.0.0",
+  "version": "2.0.0",
   "description": "Create By Lexxy Official",
   "main": "main.js",
   "scripts": {
-    "start": "npm i && npm i -g pm2 && pm2 start main.js && pm2 save && pm2 logs"
+    "start": "node main.js"
   },
   "author": "Lexxy Official",
   "license": "ISC",
@@ -12,6 +12,7 @@
     "@adiwajshing/baileys": "^4.4.0",
     "@adiwajshing/keyed-db": "^0.2.4",
     "@bochilteam/scraper": "^3.0.0",
+    "@ffmpeg-installer/ffmpeg": "^1.1.0"
     "chalk": "^4.1.2",
     "cheerio": "^1.0.0-rc.10",
     "clui": "^0.3.6",
@@ -19,7 +20,6 @@
     "crypto": "^1.0.1",
     "fluent-ffmpeg": "^2.1.2",
     "form-data": "^4.0.0",
-    "hxz-api": "^1.0.1",
     "instagram-url-direct": "^1.0.13",
     "jimp": "^0.16.2",
     "moment-timezone": "^0.5.34",
@@ -29,7 +29,6 @@
     "qrcode": "^1.5.0",
     "qrcode-terminal": "^0.12.0",
     "scrape-primbon": "^1.1.0",
-    "tiktok-scraper": "^1.4.36",
     "tiktok-scraper-ts": "^1.4.0",
     "xfarr-api": "^2.0.0"
   }
